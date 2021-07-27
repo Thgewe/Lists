@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +58,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHold
         public void bind(Item item) {
             titleTextView.setText(item.getTitle());
             valueTextView.setText(item.getValue());
+
+            if (item.getCurrentPos() == 0) {
+                valueTextView.setTextColor(ContextCompat.getColor(valueTextView.getContext(),R.color.dark_sky_blue));
+            } else if (item.getCurrentPos() == 1) {
+                valueTextView.setTextColor(ContextCompat.getColor(valueTextView.getContext(),R.color.apple_green));
+            }
         }
     }
 }
