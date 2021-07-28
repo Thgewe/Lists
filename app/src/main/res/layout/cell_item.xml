@@ -5,7 +5,6 @@
     android:padding="16dp"
     android:orientation="horizontal">
 
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/cellItemTitleView"
         android:layout_width="0dp"

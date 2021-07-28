@@ -26,11 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-//    private RecyclerView itemsView;
-//    private Button addButton;
-//    private ItemsAdapter itemsAdapter = new ItemsAdapter();
-//    List<Item> item = new ArrayList<>();
-//    ActivityResultLauncher<Intent> activityResultLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,41 +38,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(pages);
         tabs.getTabAt(0).setText("Expense");
         tabs.getTabAt(1).setText("Income");
-//        addButton = findViewById(R.id.button_main_add);
-//        configureRecyclerView();
-//        addButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(this, AddItemActivity.class);
-//            activityResultLauncher.launch(intent);
-//        });
-//
-//        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-//                new ActivityResultCallback<ActivityResult>() {
-//            @Override
-//            public void onActivityResult(ActivityResult result) {
-//                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-//                    item.add(new Item(result.getData().getStringExtra("title"), result.getData().getStringExtra("value")));
-//                    itemsAdapter.setData(item);
-//                    generateItem();
-//                }
-//            }
-//        });
     }
-//    private void generateItem() {
-//        itemsAdapter.setData(item);
-//    }
-//
-//    private void configureRecyclerView() {
-//        itemsView = findViewById(R.id.itemsView);
-//        itemsView.setAdapter(itemsAdapter);
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),
-//                LinearLayoutManager.VERTICAL, false);
-//
-//        RecyclerView.ItemDecoration itemDecor = new DividerItemDecoration(itemsView.getContext(),
-//                LinearLayoutManager.VERTICAL);
-//        itemsView.addItemDecoration(itemDecor);
-//        itemsView.setLayoutManager(layoutManager);
-//    }
-
 
     static class BudgetPagerAdapter extends FragmentPagerAdapter {
         public BudgetPagerAdapter(@NonNull @NotNull FragmentManager fm, int behavior) {
