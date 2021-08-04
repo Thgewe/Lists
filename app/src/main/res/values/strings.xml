@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">List</string>
     <string name="button_add">Добавить</string>
+    <string name="connection_lost">Sorry we can\'t load your money list</string>
+    <string name="connection_success">Success</string>
+    <string name="fill_fields">empty input fields</string>
+    <string name="success_added">success added</string>
+    <string name="success_expense">expense success</string>
+    <string name="success_income">income success</string>
 </resources>

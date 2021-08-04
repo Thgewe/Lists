@@ -1,5 +1,9 @@
 package com.example.list;
 
+import android.widget.Toast;
+
+import com.example.list.remote.MoneyRemoteItem;
+
 public class Item {
     private String title;
     private String value;
@@ -21,5 +25,13 @@ public class Item {
 
     public int getCurrentPos() {
         return currentPos;
+    }
+
+    public static Item getInstance(MoneyRemoteItem moneyRemoteItem) {
+        if (moneyRemoteItem.getType().equals("expense")) {
+            return new Item(moneyRemoteItem.getName(), moneyRemoteItem.getPrice() + "$", 0);
+        } else {
+            return new Item(moneyRemoteItem.getName(), moneyRemoteItem.getPrice() + "$", 1);
+        }
     }
 }
