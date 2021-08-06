@@ -1,6 +1,7 @@
 package com.example.list;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.list.remote.MoneyRemoteItem;
 
@@ -31,17 +33,18 @@ public class BudgetFragment extends Fragment {
     public static final int REQUEST_CODE = 0;
     public static final String ARGS_CURRENT_POSITION = "args_current_position";
 
-    private Button addButton;
     private RecyclerView recyclerView;
     private ItemsAdapter itemsAdapter = new ItemsAdapter();
     private List<Item> itemModels = new ArrayList<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String type;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadItems();
+        loadItems(getActivity().getSharedPreferences(getString(R.string.app_name), 0));
     }
 
     @Nullable
@@ -52,15 +55,12 @@ public class BudgetFragment extends Fragment {
                              @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_budget, null);
         recyclerView = view.findViewById(R.id.itemsView);
-        addButton = view.findViewById(R.id.button_main_add);
-
-        addButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AddItemActivity.class);
-            type = getArguments().getString(ARGS_CURRENT_POSITION);
-            startActivityForResult(intent, REQUEST_CODE);
-        });
 
         recyclerView.setAdapter(itemsAdapter);
+        swipeRefreshLayout = view.findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            loadItems(getActivity().getSharedPreferences(getString(R.string.app_name), 0));
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -80,6 +80,9 @@ public class BudgetFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        if (data == null) {
+            return;
+        }
         putRemoteItem(data.getStringExtra("name"), data.getIntExtra("price", 0));
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -92,35 +95,37 @@ public class BudgetFragment extends Fragment {
         return fragment;
     }
 
-    public void loadItems() {
-        compositeDisposable.add(((LoftApp) getActivity().getApplication()).moneyApi.getMoneyItems(getArguments().getString(ARGS_CURRENT_POSITION))
+    public void loadItems(SharedPreferences sharedPreferences) {
+        String authToken = sharedPreferences.getString(LoftApp.TOKEN, "");
+        compositeDisposable.add(((LoftApp) getActivity().getApplication()).moneyApi.getMoneyItems(getArguments().getString(ARGS_CURRENT_POSITION), authToken)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(moneyResponse -> {
-                    if (moneyResponse.getStatus().equals("success")) {
-                        for (MoneyRemoteItem moneyRemoteItem : moneyResponse.getMoneyItemsList()) {
+                .subscribe(moneyRemoteItems -> {
+                        for (MoneyRemoteItem moneyRemoteItem : moneyRemoteItems) {
                             itemModels.add(Item.getInstance(moneyRemoteItem));
                         }
+                        swipeRefreshLayout.setRefreshing(false);
                         itemsAdapter.setData(itemModels);
                         itemModels.clear();
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(),getString(R.string.connection_lost), Toast.LENGTH_LONG).show();
-                    }
                 }, throwable -> {
+                    swipeRefreshLayout.setRefreshing(false);
                     Toast.makeText(getActivity().getApplicationContext(),throwable.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }));
     }
 
     public void putRemoteItem(String name, int price) {
+        type = getArguments().getString(ARGS_CURRENT_POSITION);
         compositeDisposable.add(((LoftApp) getActivity().getApplication()).moneyApi.postMoney(
                 price,
                 name,
-                type
+                type,
+                getActivity().getSharedPreferences(getString(R.string.app_name), 0).getString(LoftApp.TOKEN, "")
         )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.success_added), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.successfully_added), Toast.LENGTH_LONG).show();
+                    loadItems(getActivity().getSharedPreferences(getString(R.string.app_name), 0));
                 }, throwable -> {
                     Toast.makeText(getActivity().getApplicationContext(), throwable.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }));

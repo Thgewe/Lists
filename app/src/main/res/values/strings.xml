@@ -4,7 +4,10 @@
     <string name="connection_lost">Sorry we can\'t load your money list</string>
     <string name="connection_success">Success</string>
     <string name="fill_fields">empty input fields</string>
-    <string name="success_added">success added</string>
+    <string name="successfully_added">successfully added</string>
     <string name="success_expense">expense success</string>
     <string name="success_income">income success</string>
+    <string name="edittext_price_hint">Price</string>
+    <string name="edittext_title_hint">Name</string>
+    <string name="button_additem_add">add</string>
 </resources>

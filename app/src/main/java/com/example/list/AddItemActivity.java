@@ -1,8 +1,12 @@
 package com.example.list;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,9 +28,9 @@ public class AddItemActivity extends AppCompatActivity {
     private Button addButton;
     private EditText titleText;
     private EditText valueText;
-//    private String type;
 
-//    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private String mPrice;
+    private String mName;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -35,41 +39,63 @@ public class AddItemActivity extends AppCompatActivity {
 
         titleText = findViewById(R.id.edittext_additem_title);
         valueText = findViewById(R.id.edittext_additem_value);
-        addButton = findViewById(R.id.button_additem_add);
-//        type = getIntent().getExtras().getString("type");
-        addButton.setOnClickListener(v -> {
-            if (titleText.getText().equals("") || valueText.getText().equals("")) {
-                Toast.makeText(getApplicationContext(), getString(R.string.fill_fields), Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent();
-//                putRemoteItem();
-                intent.putExtra("name", titleText.getText().toString());
-                intent.putExtra("price", Integer.parseInt(valueText.getText().toString()));
-                setResult(RESULT_OK, intent);
-                finish();
+        if (getIntent().getIntExtra("color", 2) == 0) {
+            titleText.setTextColor(Color.parseColor("#4A90E2"));
+            valueText.setTextColor(Color.parseColor("#4A90E2"));
+        } else {
+            titleText.setTextColor(Color.parseColor("#7ED321"));
+            valueText.setTextColor(Color.parseColor("#7ED321"));
+        };
+
+        titleText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                mName = s.toString();
+                checkEditTextHasText();
+            }
+        });
+
+
+        valueText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPrice = s.toString();
+                checkEditTextHasText();
+            }
+        });
+        addButton = findViewById(R.id.button_additem_add);
+        checkEditTextHasText();
+        addButton.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.putExtra("name", mName);
+            intent.putExtra("price", Integer.parseInt(mPrice));
+            setResult(RESULT_OK, intent);
+            finish();
         });
     }
 
-    @Override
-    protected void onDestroy() {
-//        compositeDisposable.dispose();
-        super.onDestroy();
+    public void checkEditTextHasText() {
+        addButton.setEnabled(!TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mPrice));
     }
 
-//    public void putRemoteItem() {
-//        Disposable disposable = ((LoftApp) getApplication()).moneyApi.postMoney(
-//                Integer.parseInt(valueText.getText().toString()),
-//                titleText.getText().toString(),
-//                type
-//        )
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(() -> {
-//                    Toast.makeText(getApplicationContext(), getString(R.string.success_added), Toast.LENGTH_LONG).show();
-//                }, throwable -> {
-//                    Toast.makeText(getApplicationContext(), throwable.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-//                });
-//        compositeDisposable.add(disposable);
-//    }
 }

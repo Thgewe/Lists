@@ -2,35 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edittext_additem_title"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="title"
-        android:textColorHint="@color/black"
-        android:textSize="20sp"
-        android:padding="16dp"/>
+        android:layout_marginTop="127dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginEnd="104dp"
+        app:boxBackgroundColor="@color/white"
+        android:hint="@string/edittext_title_hint">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edittext_additem_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edittext_additem_value"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="value"
-        android:textColorHint="@color/black"
-        android:textSize="20sp"
-        android:padding="16dp" />
+        android:layout_marginStart="33dp"
+        android:layout_marginEnd="104dp"
+        app:boxBackgroundColor="@color/white"
+        android:hint="@string/edittext_price_hint">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edittext_additem_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textSize="20sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_additem_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
+        android:textSize="20sp"
+        android:layout_marginTop="61dp"
         android:layout_gravity="center"
-        android:padding="16dp"
-        android:text="Добавить" />
-
-
+        android:textColor="@color/add_button_text_color_selector"
+        android:drawableStart="@drawable/check_selector"
+        android:background="@null"
+        android:text="@string/button_additem_add" />
 
 </LinearLayout>
